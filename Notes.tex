@@ -1,0 +1,752 @@
+% load lecture note class
+\documentclass{easyclass}
+\begin{document}
+\begin{titlepage}
+    \university{University of Surrey}
+    \courseid{COM3026}
+    \title{Distributed Computing Lecture Notes}
+    \author{Adrian Coutsoftides}
+    \version{9102 Spring}
+    \instructor{Instructors: Dr.~Ins \textsc{Tructor1}\par
+    	Dr.~Ins \textsc{Tructor2}, Dr.~Ins \textsc{Tructor3}\par}
+    \maketitle
+\end{titlepage}
+
+\tableofcontents
+
+\chapter{Moore's law}
+
+\chapter{Network partition}
+
+\chapter{Marshaling}
+
+\chapter{Berkely Algorithm}
+
+\chapter{Cristian's algorithm}
+
+\chapter{Lamport algorithm}
+
+\chapter{Mutual Exclusion Algorithm}
+
+\chapter{Leader Election Algorithms}
+
+\chapter{Deadlock}
+
+\chapter{Salt}
+
+\chapter{Symmetric encryption}
+
+\chapter{TCP \& UDP}
+\section{TCP}
+\section{UDP}
+
+\chapter{Kerberos}
+\begin{itemize}
+    \item Developed by MIT
+    \item Trusted third party
+    \item Symmetric crypto
+    \item Passwords not sent in clear text
+    \begin{itemize}
+        \item Assumes only network is compromised
+    \end{itemize}
+\end{itemize}
+\chapter{Challenge-handshake}
+
+\chapter{Diffie-Hellman (L09)}
+Secure key distribution is the biggest problem with symmetric cryptography.
+
+\begin{theo}[Diffie-Hellman Key Exchange]{}
+    \begin{itemize}
+        \item First algorithm to use public / private keys
+        \item \emph{Not} public key encryption
+        \item Uses a one-way function 
+        \begin{itemize}
+            \item Based on difficulty of computing discrete 
+            logarithms in a finite field compared with ease of calculating exponentiation
+        \end{itemize}
+    \end{itemize}
+    $\rightarrow$ Allows us to negotiate a secret \textbf{common key} without fear of evesdroppers\\
+    $\rightarrow$ All arithmetic operations are performed in a field of integers modulo some large number
+    \begin{itemize}
+        \item Both parties agree on a large prime $p$ and a number $\alpha < p$
+        \item Each party generates a public / private key pair
+        \begin{itemize}
+            \item Private key for user $i$: $X_i$
+            \item Public key for user $i$: $Y_i = \alpha^{X_i} \mod p$
+        \end{itemize}
+    \end{itemize}
+\end{theo}
+
+\begin{lem}[Diffie Hellman exponential key exchange]{}
+    \begin{minipage}[t]{0.45\linewidth}
+        \centering
+        \begin{itemize}
+            \item Alice has a secret key  $X_A$
+            \item Alice has a public key $Y_A$
+            \item Alice computes $K = Y_B^{X_A} \mod p$
+        \end{itemize}
+        \end{minipage}
+        \hspace{0.5cm}
+        \begin{minipage}[t]{0.45\linewidth}
+            \begin{itemize}
+                \item Bob has a secret key $X_B$
+                \item Bob has a public key  $Y_B$
+                \item Bob computes $K' = Y_A^{X_B} \mod p$
+            \end{itemize}
+        \centering
+    \end{minipage}
+
+    \begin{definition}{}
+        Given that $K = K'$, this means $K$ is a \textbf{common key} known only to Bob and Alice 
+    \end{definition}
+\end{lem}
+\newpage
+\section{RSA Public Key Cryptography}
+    \begin{itemize}
+        \item Each user generates 2 keys
+        \begin{itemize}
+            \item \emph{Private key} (kept secret)
+            \item \emph{Public key} (can be shared with anyone)
+        \end{itemize}
+    \end{itemize}
+    $\rightarrow$ Based on the difficulty of factoring large numbers
+    \begin{theo}[Public-key algorithm]{}
+        \begin{itemize}
+            \item Two related keys:
+            \begin{itemize}
+                \item $C = E_{K1}(P)$,  $P = D_{K2}(C)$
+                \item $C' = E_{K2}(P)$,  $P = D_{K1}(C')$
+                \item $K_1$ is public, $K_2$ is private
+            \end{itemize}
+            \item Examples:
+            \begin{itemize}
+                \item RSA \& Elliptic Curve Algorithms
+                \item DSS (digital signature standard)
+            \end{itemize}
+            \item Key length:
+            \begin{itemize}
+                \item Not every number is a valid key (unlike symmetric crypto)
+                \item 3072-bit RSA = 256-bit elliptic curve = 128-bit symmetric cipher
+                \item 15360-bit RSA = 521-bit elliptic curve = 256-bit symmetric cipher
+            \end{itemize}
+        \end{itemize}
+
+        Different keys for encrypting and decrypting
+        \begin{itemize}
+            \item No need to worry about key distribution
+            \item Share public keys
+            \item Keep private keys secret
+        \end{itemize}
+        $\rightarrow$ Alice encrypts her message with Bob's public key, and Bob 
+        decrypts it with his private key
+    \end{theo}
+
+    \section{Session keys}
+    \begin{definition}{}
+        Randomly generated key for one communication session
+    \end{definition}
+
+    \begin{itemize}
+        \item Use public key to send the session key
+        \item Use symmetric algorithm to encrypt data with the session key
+    \end{itemize}
+
+    \begin{prf}[Security]{}
+        \begin{itemize}
+            \item Public key algorithms are almost never used to encrypt messages
+            \begin{itemize}
+                \item Much slower, vulnerable to \emph{chosen-plaintext} attacks
+                \item RSA-2048 approximately 55x slower to encrypt and 2,000x slower to  decrypt than AES-256
+            \end{itemize}
+        \end{itemize}
+    \end{prf}
+
+    \begin{theo}[Communication using hybrid crypto-system]{}
+        \begin{itemize}
+            \item Encrypt message using symmetric algorithm and key $K$
+            \item Decrypt message using symmetric algorithm and key $K$
+        \end{itemize}
+        
+    \end{theo}
+
+    \section{Hash functions}
+    \begin{itemize}
+        \item Easy to compute in one direction
+        \item Difficult to comput the other way round
+    \end{itemize}
+    $\rightarrow$ discrete logs or prime factoring \\
+    $\rightarrow$ difficult implies no known shortcuts, requires exhaustive search
+
+    \begin{lem}[Digital Signatures]{}
+        \begin{itemize}
+            \item Validate
+            \begin{enumerate}
+                \item The creator (signer) of the content
+                \item The content has not been modified since it was signed
+                \item Content itself does not have to be encrypted
+            \end{enumerate}
+        \end{itemize}
+        \textbf{Encrypting a message with a private key is the same as signing it} \\
+        But this is not ideal:
+        \begin{itemize}
+            \item We don't want to permute or hide the content
+            \item We just want Bob to verify that the content came from Alice
+            \item Public key cryptography is much slower than symmetric encryption
+            \item What if the input was multiple \texttt{GB}
+        \end{itemize}
+    \end{lem}
+
+    \begin{theo}[Hash Functions]{}
+        \begin{definition}{}
+            Cryptographic hash function, also known as a digest
+        \end{definition}
+        \begin{itemize}
+            \item Input: arbitary bytes
+            \item Output: fixed-length bit-string
+        \end{itemize}
+
+        \begin{itemize}
+            \item Properties
+            \begin{itemize}
+                \item One-way function
+                \begin{itemize}
+                    \item Given a hash $H = hash(M)$ it should be difficult to compute $M$ given $H$
+                \end{itemize}
+                \item Collision resistant
+                \begin{itemize}
+                    \item Given a hash $H = hash(M)$ it should be difficult to find $M'$ s.t $H = hash(M')$
+                    \item For a hash of length $L$, a perfect hash would take $2^{L/2}$ attempts
+                \end{itemize}
+                \item Efficient
+                \begin{itemize}
+                    \item Computing a hash function should be computationally efficient
+                \end{itemize}
+            \end{itemize}
+        \end{itemize}
+        
+    \end{theo}
+
+    \begin{prf}[Popular hash functions]{}
+        \begin{itemize}
+            \item SHA-2
+            \item SHA-3
+            \begin{itemize}
+                \item NIST standard as of 2015
+            \end{itemize}
+            \item MD5
+            \begin{itemize}
+                \item 128 bits
+            \end{itemize}
+            \item Hash functions derived from cyphers
+            \begin{itemize}
+                \item Blowfish (used for password hashing in openBSD)
+                \item 3DES - used for old linux password hashes
+            \end{itemize}
+        \end{itemize}
+    \end{prf}
+\newpage
+    \begin{theo}[Digital signatures with hash functions]{}
+        \begin{itemize}
+            \item Sender
+            \begin{itemize}
+                \item Create hash of message
+                \item Encrypt hash with \textbf{private-key} \& send it with message
+            \end{itemize}
+            \item Recipient 
+            \begin{itemize}
+                \item Decrypts the encrypted hash using your public key
+                \item Computes hash of the received message
+                \item Compare the descrypted hash with the message hash
+                \item If they're the same the message has not been modified
+            \end{itemize}
+        \end{itemize}
+    \end{theo}
+
+    \begin{prf}[Message Auth Codes vs. Signatures]{}
+        \begin{minipage}[t]{0.45\linewidth}
+            \centering
+            \begin{itemize}
+                \item \textbf{Message authentication code (MAC)}
+                \item Hash of message encrypted with a symmetric key
+            \end{itemize}
+            \end{minipage}
+            \hspace{0.5cm}
+            \begin{minipage}[t]{0.45\linewidth}
+                \begin{itemize}
+                    \item \textbf{Digital signature}
+                    \item Hash of the message encrypted with the owner's private key
+                    \begin{itemize}
+                        \item Alice encrypts the hash with her private key
+                        \item Bob validates it by decrypting it with her public key \& comparing
+                        with $hash(M)$
+                    \end{itemize}
+                    \item Provides non-repudiation
+                \end{itemize}
+            \centering
+        \end{minipage}
+        \begin{definition}{}
+            Non-Repudiation means the recipient cannot change the encrypted hash
+        \end{definition}
+    \end{prf}
+
+    \section{Digital Signatures with public key crypto}
+
+    \begin{itemize}
+        \item Alice generates hash of message
+        \item Alice encrypts has with her \textbf{private key}, this is her signature
+        \item Alice sends bob the message and the encrypted hash
+        \item Bob decypts the hash using Alice's public key
+        \item Bob computes the hash of the message sent by Alice
+        \item \textbf{If the hashes match, the signature must be valid}
+    \end{itemize}
+
+    \subsection{Multiple signers}
+    \begin{itemize}
+        \item Charles
+        \begin{itemize}
+            \item Generates hash of message $H(P)$
+            \item Decrypts Alice's signature with her public key
+            \begin{itemize}
+                \item Validates the signature $D_A(S) = H(P)$
+            \end{itemize}
+            \item Decypts Bob's signature with his public key
+            \begin{itemize}
+                \item Validates the signature $D_B(S) = H(P)$
+            \end{itemize}
+        \end{itemize}
+    \end{itemize}
+
+    \subsection{Covert \& Authenticated Messaging}
+    Combine encryption with digital signatures
+
+    \begin{theo}[Covert Authenticated Messages]{}
+        Use a \textbf{session key}:
+        \begin{itemize}
+            \item Pick a random key, $K$ to encrypt the message with a symmetric algorithm
+            \item Encrypt $K$ with the public key of each recipient
+            \item For \emph{signing}, \textbf{encrypt the hash} of each message with
+            the sender's private key
+        \end{itemize}
+    \end{theo}
+\chapter{2-phase / 3-phase commit protocol}
+
+\chapter{Map-Reduce}
+
+\chapter{PBFT (L11)}
+\begin{theo}[Historical Context]{}
+    \begin{itemize}
+        \item $N$ generals, $f$ of them are traitors
+        \item Exchange plans by messengers
+        \item \begin{itemize}
+            \item Unreliable %
+        \end{itemize}
+        \item All loyal generals agree on same plan of action
+        \item Chosen plan must be poposed by loyal general
+    \end{itemize}
+\end{theo}
+
+
+\begin{lem}[Computer Science Setting]{}
+    \begin{itemize}
+        \item A general $\Leftrightarrow$ A program / process / replica
+        \item \begin{itemize}
+            \item Replicas communicate
+            \item Traitors $\Leftrightarrow$ Failed replicas
+        \end{itemize}
+        \item Byzantine army $\Leftrightarrow$ Deterministic replicated service
+        \item \begin{itemize}
+            \item Service has states and some operations
+            \item Service should cope with failures
+            \item \begin{itemize}
+                \item State should be consistent across all replicas
+            \end{itemize}
+        \end{itemize}
+    \end{itemize}
+\end{lem}
+\begin{prf}[Applications]{}
+    \begin{itemize}
+        \item Replicted file systems
+        \item Backup
+        \item Distributed Servers
+        \item Shared ledgers between banks
+    \end{itemize}
+\end{prf}
+
+\section{Byzantine fault tolerance}
+\begin{itemize}
+    \item Distributed computing with faulty replicas
+     \begin{itemize}
+        \item $N$ replicas
+        \item $f$ of them faulty
+        \item Replicas initially start in the same state
+    \end{itemize}
+    \item For a given request:
+    \begin{itemize}
+        \item Gurantee that all non faulty replicas agree on the next state
+        \item Provide system consistency even when some replicas may be inconsistent
+    \end{itemize}
+\end{itemize}
+
+\begin{prf}[Properties]{}
+    \begin{itemize}
+        \item Safety
+        \begin{itemize}
+            \item \emph{Agreement}: All non-faulty relpicals agree on the same state
+            \item \emph{Validity}: The chosen state is valid
+        \end{itemize}
+        \item Liveness
+         \begin{itemize}
+            \item Some state is eventually agreed upon
+            \item If a state is chosen all replicas eventually arrive at the same state
+        \end{itemize}
+    \end{itemize}
+\end{prf}
+
+
+\begin{prf}[Paxos vs BFT]{}
+    \begin{minipage}[t]{0.45\linewidth}
+        \centering
+        \begin{itemize}
+            \item [\textbf{Paxos}]
+            \item Async Network
+            \item Tolerated crash failure
+            \item Guranteed safety but not Liveness
+            \item Protocol may not terminate
+            \item Terminate if the network is synchronous eventually
+            \item \textbf{Require at least $3f+1$ replicas to tolerate $f$ faulty replicas}
+        \end{itemize}
+        \end{minipage}
+        \hspace{0.5cm}
+        \begin{minipage}[t]{0.45\linewidth}
+            \begin{itemize}
+                \item [\textbf{BFT}]
+                \item Better performance
+                \item Model in BFT is practical
+                \item Adoption in inducstry
+            \end{itemize}
+        \centering
+    \end{minipage}
+\end{prf}
+\newpage
+\begin{theo}[Byzantine System Model]{}
+    \begin{itemize}
+        \item Asynchronous distributed system
+                \begin{itemize}
+                    \item Delay, duplicate or deliver messages out of order
+                \end{itemize}
+                \item Byzantine failure model
+                 \begin{itemize}
+                    \item Faulty replicas may behave arbitarily
+                \end{itemize}
+                \item Preventing spoofing, relays and corrupted messages
+                \begin{itemize}
+                    \item Public-key signature: one cannot impersonate the other
+                    \item Message authentication code, collision resistant hash: one cannot tamper
+                    the other's messages
+                \end{itemize}
+    \end{itemize}
+\end{theo}
+
+\begin{theo}[Advesary Model]{}
+    \begin{itemize}
+        \item Can coordinate faulty replicas
+        \item Delay communications but not indefinetly
+        \item Cannot subvert cryptographic techniques employed
+    \end{itemize}
+\end{theo}
+
+\begin{theo}[Service Properties]{}
+    \begin{itemize}
+        \item Safety
+        \item Liveness
+        \item Optimal resilliency 
+        \begin{itemize}
+            \item To tolerate $f$ fulty replicas the system requires $n = 3f + 1$ replicas
+            \item Can proceed after communicating with $n-f \backsim 2f+1$ replicas
+            \begin{itemize}
+                \item If none of those $2f+1$ replicas is faulty, good
+                \item Even if $f$ are faulty, the majority vote ($f+1$) ensures safety
+            \end{itemize}
+        \end{itemize}
+    \end{itemize}
+\end{theo}
+\newpage
+\begin{prf}[Algorithm]{}
+\begin{itemize}
+    \item The set of relicas is $R$ where $\vert R \vert = 3f+1$
+    \item Each replica identified by UID $0, \hdots 3f$
+    \item Each replica is deterministic and starts at the same initial state
+    \item \textbf{A view is a configuration of replicas}
+    \begin{itemize}
+        \item Replica $p = v \mod \vert R \vert$ is the primary of view $v$
+        \item All other replicas are backups
+    \end{itemize}
+\end{itemize}
+
+\begin{enumerate}
+    \item Client sents request to primary
+    \item Primary validates request and initiates 3-phase protocol to ensure consensus:
+    \[\text{Pre-Prepare} \rightarrow \text{Prepare} \rightarrow \text{Commit}\]
+    \item Replicas execute request and send it directly back to the client
+    \item Client accepts result after receiving $f+1$ identical replies
+\end{enumerate}
+\end{prf}
+
+\begin{theo}[Three phase protocol goals]{}
+    Ensure safety and liveliness despite asynchronous nature
+    \begin{itemize}
+        \item Establish total order of execution requests (\emph{Pre-Prepare + Prepare})
+        \item Ensure requests are ordered consistently across views (\emph{Commit})
+    \end{itemize}
+\end{theo}
+
+\begin{lem}[Three phases]{}
+    \begin{itemize}
+        \item Pre-Prepare
+        \begin{itemize}
+            \item Achknowledge a unique sequence number for the request
+        \end{itemize}
+        \item Prepare
+        \begin{itemize}
+            \item The replicas agree on this sequence number
+        \end{itemize}
+        \item Commit
+        \begin{itemize}
+            \item Establish total order across views
+        \end{itemize}
+    \end{itemize}
+    \[\text{Request} \rightarrow \text{Pre-Prepare} \rightarrow \text{Prepare} \rightarrow \text{Commit} \rightarrow \text{Reply}\]
+\end{lem}
+\section{Three phase protocol}
+\begin{theo}[Definitions]{}
+    \begin{itemize}
+        \item Request message: $m$
+        \item Sequence number: $n$
+        \item Signature: \textyen
+        \item View: $v$
+        \item Primary replica: $p$
+        \item Digest of message $D(m) \rightarrow d$
+    \end{itemize}
+\end{theo}
+
+\begin{prf}[Pre-Prepare]{}
+    Purpose: acknowledge a unique sequence number for the request
+    \begin{itemize}
+        \item \textbf{Send} 
+        \begin{itemize}
+            \item The primary assigns the request a sequence number and broadcasts
+            this to all replicas
+        \end{itemize}
+        \item A backup will \textbf{Accept} a message \emph{iff}:
+        \begin{itemize}
+            \item $d,v,n, \text{\textyen}$ are valid
+            \item ($v,n$) has not been processed before for another digest $d$
+        \end{itemize}
+    \end{itemize}
+\end{prf}
+
+\begin{prf}[Prepare]{}
+    Purpose: the replicas agree on this sequence number, \\
+    $\rightarrow$ this is after backup $i$ accepts \texttt{<Pre-Prepare>} message
+    \begin{itemize}
+        \item \textbf{Send}
+        \begin{itemize}
+            \item multicast a \texttt{<Prepare>} message acknowledging $n,d,i,v$
+        \end{itemize}
+        \item A replica \textbf{Accepts} the message \emph{iff}:
+        \begin{itemize}
+            \item $d,v,,n,\text{\textyen}$ are valid
+        \end{itemize}
+    \end{itemize}
+\end{prf}
+
+\begin{prf}[Prepared]{}
+    Predicate $(m,v,n,i) = \text{\texttt{True}}$ \emph{iff} for replica $i$:
+    \begin{itemize}
+        \item \texttt{<Pre-Prepare>} for $m$ has been received
+        \item $2f+1$ (including self) is distinct and 
+        corresponding \texttt{<Prepare>} messages received.
+    \end{itemize}
+\end{prf}
+
+\begin{prf}[Commit]{}
+    Purpose: establish order across views, \\
+    Once $(m,v,n,i) = \text{\texttt{True}}$ is prepared for replica $i$:
+    \begin{itemize}
+        \item \textbf{Send}
+        \begin{itemize}
+            \item multicast \texttt{<Commit>} message to all replicas
+        \end{itemize}
+        \item A replica \textbf{Accepts} the message \emph{iff}:
+        \begin{itemize}
+            \item $d,v,,n,\text{\textyen}$ are valid    
+        \end{itemize}
+    \end{itemize}
+\end{prf}
+
+\begin{lem}[Commited]{}
+    Predicate $(m,v,n,i) = \text{\texttt{True}}$ commited \emph{iff} for replica $i$:
+    \begin{itemize}
+        \item \texttt{prepared}$(m,v,n,i) = \text{\texttt{True}}$
+        \item $2f+1$ (including self) distinct and corresponding valid \texttt{<Commit>} message received
+    \end{itemize}
+\end{lem}
+
+\begin{theo}[Executing Requests]{}
+    Replica $i$ executes request \emph{iff}:
+    \begin{itemize}
+        \item \texttt{commited}$(m,v,n,i) = \text{\texttt{True}}$
+        \item All requests with slower $n$ are already executed
+    \end{itemize}
+    Once executed, the replicas will directly sent \texttt{<Reply>} to the client
+\end{theo}
+
+Everything proceeds as normal if the primary is good, but when
+the primary is faulty this can cause issues.
+\section{View Change}
+\begin{lem}[View Change]{}
+    If the replica receives requests \{1,2,4,5\}, it waits to receive
+    request 3 before processing 4 \& 5. \\
+    Whenever a lot of non-faulty replicas detect that the primary is faulty,
+    they together begin the \texttt{view\_change} operation.
+    \begin{itemize}
+        \item If they are stuck, they suspect the primary is faulty
+        \item This fault is detected using timeouts
+        \item This depends in part on the synchrony assumption
+        \item They will then change the view
+        \begin{itemize}
+            \item $p \leftarrow (p+1) \mod \vert R \vert$
+        \end{itemize}
+    \end{itemize}
+\end{lem}
+
+\begin{prf}[Initiating the View Change]{}
+    \begin{itemize}
+        \item Every replica that  wants to begin a view change sends a
+        \texttt{<View-Change>} message to \texttt{Everyone}.
+        \begin{itemize}
+            \item Includes current state so that all replicas will know which
+            requests haven't been commited yet (due to faulty primary)
+            \item List of requests that were prepared
+        \end{itemize}
+        \item When the new primary receives $2f+1$ \texttt{<View-Change>} messages,
+        it will begin the view change
+    \end{itemize}
+\end{prf}
+\newpage
+\begin{prf}[View-Change \& Correctness]{}
+    \begin{itemize}
+        \item New primary gathers information about which requests need committing 
+        \begin{itemize}
+            \item This information is included in the \texttt{<View-Change>} message 
+            \item All replicas can also compute this sicne they also receive the 
+            \texttt{<View-Change>} message.
+            \begin{itemize}
+                \item Will avoid faulty new primary making the state inconsistent
+            \end{itemize}
+        \end{itemize}
+        \item New primary sends \texttt{<New-View>} to all replicas
+        \item All replicas perform 3 phases on request again
+    \end{itemize}
+\end{prf}
+
+\begin{lem}[View Change fixing missing request]{}
+    \textbf{Sequence numbers with missing requests are replaced with a } \emph{"no-op / pass"} \textbf{operation (null operation).}
+\end{lem}
+
+\begin{theo}[State Recomputation]{}
+    \begin{itemize}
+        \item New primary needs to compute which requests need to be commited again
+        \item Redoing all requests is expensive
+        \item Use checkpoints to speed up progress
+        \begin{itemize}
+            \item Every 100 steps, all replicas save their current state into a checkpoint
+            \item Replicas should agree on the checkpoint as well
+        \end{itemize}
+    \end{itemize}
+\end{theo}
+Other types of problems include:
+\begin{itemize}
+    \item New primary also faulty
+    \begin{itemize}
+        \item Use another time-out in the view change
+        \begin{itemize}
+            \item When the timeout expires another replica will be chosen as the primary
+            \item Since there are at most $f$ faulty replicas, \textbf{the primary can be
+            consecutively faulty for at most $f$ times}
+        \end{itemize}
+    \end{itemize}
+    \item Primary might pick disproportionately large sequence number $\backsim 1e^{10}$
+    \begin{itemize}
+        \item The sequence number must lie within a certain interval
+        \item This interval is updated periodically
+    \end{itemize}
+\end{itemize}
+\section{Client full protocol}
+The client may send a request to the primary, but the primary
+doesnt forward this request to the replicas
+\begin{theo}[Client Full Protocol]{}
+    \begin{itemize}
+        \item Client sends a request to the primary  that they knew
+        \begin{itemize}
+            \item The primary may already change, this will be handled
+        \end{itemize}
+        \item If they do not receive a reply within a period of time, it broadcasts the
+        request to all replicas
+    \end{itemize}
+\end{theo}
+
+\begin{theo}[Replica Protocol]{}
+    \begin{itemize}
+        \item If a replica receives a request from the client but not from the primary,
+        they will forward this request to the primary.
+        \item If they then do not receive a reply from the primary, they begin
+        the \texttt{view\_change} operation.
+    \end{itemize}
+\end{theo}
+
+\section{Correctness of View Change}
+A key proof illustrates why the \texttt{view\_change} operation 
+preserves \textbf{safety}.
+
+\begin{theo}[Correctness of View Change]{}
+    \begin{definition}
+        If at any moment the replica has commited a request, this request
+        will \emph{always} be commited in the \texttt{view\_change}
+    \end{definition}
+    \begin{itemize}
+        \item A request is re-commited if they are included in at least 
+        one of the \texttt{<View-Change>} messages
+        \item A commited request implies there is at least $f+1$ non-faulty replicas
+        that \emph{prepared} it.
+        \begin{proof}
+            ...
+            \begin{itemize}
+                \item $\exists \; 2f+1$ \texttt{<View-Change>} messages
+                \item $\forall m, \; \vert \: \text{\texttt{prepared}}(m) \: \vert \geq f+1$
+                \item If $\vert R \vert = 3f + 1$, at least one faulty replica must have prepared
+                $m$ and sent the \texttt{<View-Change>} message.
+            \end{itemize}
+        \end{proof}
+    \end{itemize}
+\end{theo}
+
+The safety lemma is one of the main reasons we use a three pahse protocol
+instead of a two phase protocol.
+
+\begin{itemize}
+    \item If we only have two phases, we cannot gurantee a request has been commited,
+    it will be prepared by a majority.
+    \item Commited requests will not be recommited, this violates safety
+\end{itemize}
+\chapter{Consensus}
+\section{Weak consensus}
+\section{Agreement}
+%\input{chap.tex}
+
+
+\cite{Gao}
+
+\bibliography{refs}
+
+\end{document}

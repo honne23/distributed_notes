@@ -1,0 +1,10 @@
+\begin{thebibliography}{}
+
+\bibitem[\protect\citeauthoryear{{Gao}, {Yu}, {Zhu}, and {Cai}}{{Gao}
+  et~al.}{2019}]{Gao}
+{Gao}, S., T.~{Yu}, J.~{Zhu}, and W.~{Cai} (2019).
+\newblock T-pbft: An eigentrust-based practical byzantine fault tolerance
+  consensus algorithm.
+\newblock {\em China Communications\/}~{\em 16\/}(12), 111--123.
+
+\end{thebibliography}
