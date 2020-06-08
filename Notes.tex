@@ -6,9 +6,9 @@
     \courseid{COM3026}
     \title{Distributed Computing Lecture Notes}
     \author{Adrian Coutsoftides}
-    \version{9102 Spring}
-    \instructor{Instructors: Dr.~Ins \textsc{Tructor1}\par
-    	Dr.~Ins \textsc{Tructor2}, Dr.~Ins \textsc{Tructor3}\par}
+    \version{2020 Spring}
+    \instructor{Instructors: Dr.~Kaitai \textsc{Liang}\par
+    	Dr.~Gregory \textsc{Chockler}\par}
     \maketitle
 \end{titlepage}
 
@@ -19,37 +19,144 @@
 \chapter{Network partition}
 
 \chapter{Marshaling}
+\chapter{Clock synchronization (L03)}
+\section{Berkely Algorithm}
 
-\chapter{Berkely Algorithm}
+\section{Cristian's algorithm}
+\chapter{Mutual Exclusion / Lamport (L04)}
+\section{Lamport algorithm}
 
-\chapter{Cristian's algorithm}
+\section{Mutual Exclusion Algorithm}
 
-\chapter{Lamport algorithm}
+\section{Leader Election Algorithms}
 
-\chapter{Mutual Exclusion Algorithm}
-
-\chapter{Leader Election Algorithms}
-
-\chapter{Deadlock}
-
-\chapter{Salt}
-
+\chapter{Caching (L07)}
+\section{Deadlock}
+\begin{theo}[Conditions for deadlock]{}
+    \begin{itemize}
+        \item Mutual Exclusion
+        \item Hold and wait
+        \item Non-preemption
+        \item Circular wait
+    \end{itemize}
+\end{theo}
+\section{UDP Hole punching}
 \chapter{Symmetric encryption}
 
-\chapter{TCP \& UDP}
+\chapter{TCP \& UDP (L00)}
 \section{TCP}
 \section{UDP}
 
-\chapter{Kerberos}
+\chapter{Auth (L08)}
+\subsection{Salt}
+\subsection{Kerberos}
 \begin{itemize}
     \item Developed by MIT
-    \item Trusted third party
+    \item \textbf{Trusted third party}
     \item Symmetric crypto
     \item Passwords not sent in clear text
     \begin{itemize}
         \item Assumes only network is compromised
     \end{itemize}
 \end{itemize}
+
+\begin{theo}[Kerberos]{}
+    Users and services authenticate themselves to eachother\\
+    To access a service:
+    \begin{itemize}
+        \item User presents a ticket issues by Kerberos
+        \item Service examines ticket to verify identity of users
+    \end{itemize}
+    \textbf{Kerberos is trusted third party}
+    \begin{itemize}
+        \item Knows all users and thier Passwords
+        \item Responsible for:
+        \begin{itemize}
+            \item Authentication: validating idenity
+            \item Authorization: deciding whether someone has access to a service
+            \item Key exchange: sercurely provide both parties with an encryption key
+        \end{itemize}
+    \end{itemize}
+\end{theo}
+\newpage
+\begin{prf}[Communication]{}
+    Alice and Bob both have keys and want to communicate with a service
+    \begin{enumerate}
+        \item Alice authenticates with Kerberos server
+        \begin{itemize}
+            \item Gets \textbf{session key} \& \textbf{sealed envelope}
+        \end{itemize}
+        \item Alice gives Bob the session key (securely)
+        \item Convinces Bob she also got the session key from Kerberos
+    \end{enumerate}
+\end{prf}
+\begin{lem}[Authenticate]{}
+    \begin{itemize}
+        \item Alice asks for permssion to talk to Bob from auth server
+        \item Auth server sends Alice a session key $S$ in a \emph{Ticket} (sealed envelope)
+    \end{itemize}
+\end{lem}
+
+\begin{lem}[Send key]{}
+    \textbf{Alice}
+    \begin{itemize}
+        \item Alice encrypts timestamp with session key
+        \item Sends sealed envelope to Bob
+    \end{itemize}
+    \textbf{Bob}
+    \begin{itemize}
+        \item Bob decrypts the envelope
+        \begin{itemize}
+            \item Gets session key
+        \end{itemize}
+        \item Decrypts the timestamp
+        \begin{itemize}
+            \item Validates time window
+            \item Prevent replay attacks
+        \end{itemize}
+    \end{itemize}
+\end{lem}
+
+\begin{lem}[Authenticate recipient]{}
+    \begin{itemize}
+        \item Bob encrypts Alice's timestamp in the return message
+        \item Alice validates the timestamp
+        \item They communicate using shared \textbf{session key} $S$
+    \end{itemize}
+\end{lem}
+\subsection{Kerboros key usage}
+\begin{theo}[Kerberos key usage]{}
+    \begin{itemize}
+        \item User’s password (key) must be used to decode the message from Kerberos everytime
+        a user wants to access a service
+        \item This can be avoided by caching passwords in a file (not a good idea)
+        \item Otherwise, \textbf{we can create a temporary password}:
+        \begin{itemize}
+            \item Cache temp password
+            \item Similar to session key for kerberos, to get access to other services
+            \item Split the Kerberos server into:
+            \[\text{Auth Server} + \text{Ticket granting server}\]
+        \end{itemize}
+    \end{itemize}
+    \begin{definition}{}
+        $TGS + AS = KDC$, Kerberos Key Distribution Center
+    \end{definition}
+\end{theo}
+
+\begin{lem}[Auth Server]{}
+    \begin{itemize}
+        \item Autheticates users, hands out session keys to access TGS
+        \item Before accessing TGS, user requests a ticket to contact TGS
+    \end{itemize}
+\end{lem}
+
+\begin{lem}[Ticket Granting Server]{}
+    \begin{itemize}
+        \item Anytime a user wants a service they request it from the TGS
+        \item Reply is encrypted with TGS session key
+    \end{itemize}
+    $\rightarrow$ TGS works like a temporary ID.
+\end{lem}
 \chapter{Challenge-handshake}
 
 \chapter{Diffie-Hellman (L09)}
@@ -328,9 +435,12 @@ Secure key distribution is the biggest problem with symmetric cryptography.
             the sender's private key
         \end{itemize}
     \end{theo}
-\chapter{2-phase / 3-phase commit protocol}
 
-\chapter{Map-Reduce}
+
+\chapter{Transactions (L06)}
+\section{2-phase commit}
+\section{3-phase commit}
+\chapter{Map-Reduce (Extension slides?)}
 
 \chapter{PBFT (L11)}
 \begin{theo}[Historical Context]{}
@@ -739,7 +849,7 @@ instead of a two phase protocol.
     it will be prepared by a majority.
     \item Commited requests will not be recommited, this violates safety
 \end{itemize}
-\chapter{Consensus}
+\chapter{Consensus (L10)}
 \section{Weak consensus}
 \section{Agreement}
 %\input{chap.tex}

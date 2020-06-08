@@ -1,14 +1,14 @@
 # Fdb version 3
-["bibtex Notes"] 1591610300 "Notes.aux" "Notes.bbl" "Notes" 1591610302
+["bibtex Notes"] 1591616521 "Notes.aux" "Notes.bbl" "Notes" 1591616522
   "/usr/share/texlive/texmf-dist/bibtex/bst/chicago/chicago.bst" 1198629289 37416 2ae04276c51f11eda70770f4081293b7 ""
-  "Notes.aux" 1591610302 15534 fb37c7d134af3e67b44806ec45c8a116 "pdflatex"
+  "Notes.aux" 1591616522 18410 3c9c8202eda87f16c1989ef6f7a2a58e "pdflatex"
   "refs.bib" 1591533181 261 6a5771fcba489d396b08d50fa3a84d70 ""
   (generated)
-  "Notes.blg"
   "Notes.bbl"
-["pdflatex"] 1591610300 "/root/Distributed/Notes.tex" "Notes.pdf" "Notes" 1591610302
+  "Notes.blg"
+["pdflatex"] 1591616521 "/root/Distributed/Notes.tex" "Notes.pdf" "Notes" 1591616522
   "/etc/texmf/web2c/texmf.cnf" 1590526898 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/root/Distributed/Notes.tex" 1591610298 27417 87f50c53a0cb59b16d6d28bfe792fe59 ""
+  "/root/Distributed/Notes.tex" 1591616518 31333 92a95b61701e26e658d81bb93abc65e7 ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/inconsolata/i4-t1-4.enc" 1558214095 7693 0f2dce6d313c82989ec3a67fc24df2a0 ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/libertine/lbtn_25tcsq.enc" 1490131464 2921 8ca0eb0831f9bc5da080d3697cfe67bf ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/libertine/lbtn_76gpa5.enc" 1490131464 2933 9ad527ce78d7c5fa0a642dead095f172 ""
@@ -286,15 +286,15 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1581979058 38841 ce3692aa899bb693b90b87eaa5d4d84e ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1590526934 4770781 1ed1abab22da9c3e2cc82e4db562318b ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1590526943 8264349 5a5db414afb8cd7a62c7212c01db64da ""
-  "Notes.aux" 1591610302 15534 fb37c7d134af3e67b44806ec45c8a116 "pdflatex"
-  "Notes.bbl" 1591610300 355 cc1efec39b0da70f951ff88b1546831e "bibtex Notes"
-  "Notes.out" 1591610301 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "Notes.tex" 1591610298 27417 87f50c53a0cb59b16d6d28bfe792fe59 ""
-  "Notes.toc" 1591610302 2631 7cb9bd666039427d1ba84db5c83dafd5 "pdflatex"
+  "Notes.aux" 1591616522 18410 3c9c8202eda87f16c1989ef6f7a2a58e "pdflatex"
+  "Notes.bbl" 1591616521 355 cc1efec39b0da70f951ff88b1546831e "bibtex Notes"
+  "Notes.out" 1591616521 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "Notes.tex" 1591616518 31333 92a95b61701e26e658d81bb93abc65e7 ""
+  "Notes.toc" 1591616522 3312 76b94361f445fc92c83ad872c00f823e "pdflatex"
   "easyclass.cls" 1591555426 5930 6b44ed576e76ec4240579ca206b5f32d ""
   (generated)
-  "Notes.out"
   "Notes.pdf"
-  "Notes.aux"
+  "Notes.out"
   "Notes.log"
   "Notes.toc"
+  "Notes.aux"
